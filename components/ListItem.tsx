@@ -4,12 +4,13 @@ import React from "react";
 
 interface props {
     data: PlacesSearchResultItem;
+    selectSearchFn: (data: PlacesSearchResultItem) => void;
 }
 
-const ListItem = ({ data }: props) => {
-    console.log(data);
+const ListItem = ({ data, selectSearchFn }: props) => {
     return (
-        <div className="border-[1px] border-black">
+        <div className="border-[1px] border-black" onClick={() => selectSearchFn(data)}>
+            <p>{data.place_name}</p>
             <p>{data.address_name}</p>
             <p>{data.category_group_name}</p>
         </div>
