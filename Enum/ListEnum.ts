@@ -2,7 +2,8 @@ export const RADIUS_LIST = [
     { id: 1, title: "100", value: 100, emoji: "☕️", level: 3 },
     { id: 2, title: "250", value: 250, emoji: "🧑‍⚕️", level: 3 },
     { id: 3, title: "500", value: 500, emoji: "🏨", level: 4 },
-    { id: 4, title: "1000", value: 800, emoji: "🏨", level: 4 },
+    { id: 4, title: "1000", value: 1000, emoji: "🏨", level: 4 },
+    { id: 5, title: "1500", value: 1500, emoji: "🏨", level: 4 },
 ].map((el) => Object.freeze(el));
 export const KEYWORD_LIST = [
     { id: 4, title: "전체", value: "음식점", emoji: "🏨" },

@@ -58,7 +58,7 @@ const KakaoMap = ({ changeSdkLoaded, isSdkLoaded, state, search, isOpen, setIsOp
                                 position={{ lat: Number(search.select.y), lng: Number(search.select.x) }}
                             >
                                 {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
-                                <div className="bg-slate-50">
+                                <div className="bg-slate-50 mt-16">
                                     <div
                                         style={{
                                             color: "#000",

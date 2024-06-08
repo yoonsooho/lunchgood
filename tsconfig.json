@@ -21,7 +21,8 @@
             "@/*": ["./src/*"],
             "@components/*": ["./components/*"],
             "@type/*": ["./type/*"],
-            "@Enum/*": ["./Enum/*"]
+            "@Enum/*": ["./Enum/*"],
+            "@public/*": ["./public/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

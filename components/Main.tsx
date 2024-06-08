@@ -8,8 +8,9 @@ import ListItem from "./ListItem";
 import RoundBtn from "./common/RoundBtn";
 import MainFooter from "./common/MainFooter";
 import { KEYWORD_LIST, RADIUS_LIST } from "@Enum/ListEnum";
+import Image from "next/image";
+import localIcon from "@public/img/mylocation_Icon.png";
 
-// const KAKAO_SEARCH_URL = /v2/acllo / search / address.json;
 const KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
 // const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_APP_JS_KEY}&autoload=false&libraries=services`;
@@ -94,7 +95,10 @@ export default function Main() {
     const selectSearchFn = (data: PlacesSearchResultItem) => {
         setIsOpen(true);
         setSearch((pre) => ({ ...pre, select: data }));
-        setState((pre) => ({ ...pre, center: { lat: Number(data.y), lng: Number(data.x) } }));
+        setState((pre) => ({
+            ...pre,
+            center: { lat: Number(data.y), lng: Number(data.x) },
+        }));
         // setSelectSearch(data);
     };
 
@@ -230,7 +234,7 @@ export default function Main() {
                     전송하기
                 </button>
             </div> */}
-            <div className="w-[100vw] h-[300px] min-h-[300px]">
+            <div className="w-[100vw] h-[300px] min-h-[300px] relative">
                 <KakaoMap
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
@@ -240,6 +244,18 @@ export default function Main() {
                     isSdkLoaded={isSdkLoaded}
                     radius={radius}
                 />
+                <button
+                    className="absolute bottom-[10px] right-[10px] z-10 bg-white p-[5px] rounded-full shadow-md"
+                    onClick={() => getCurrentLocation()}
+                >
+                    <Image
+                        unoptimized={true}
+                        src={"/img/mylocation_Icon.png"}
+                        width={20}
+                        height={20}
+                        alt="현재위치아이콘"
+                    />
+                </button>
             </div>
             <div>
                 <div className="border overflow-x-scroll whitespace-nowrap flex gap-[10px] p-2">
@@ -262,11 +278,11 @@ export default function Main() {
                         </React.Fragment>
                     ))}
                 </div>
-                <button onClick={() => getCurrentLocation()}>현재위치</button>
+                {/* <button onClick={() => getCurrentLocation()}>현재위치</button> */}
             </div>
-            <div className="overflow-y-scroll" ref={ref}>
+            <div className="overflow-y-scroll flex flex-col gap-[10px] mt-[10px]" ref={ref}>
                 {randomSelect ? (
-                    <ListItem data={randomSelect} />
+                    <ListItem data={randomSelect} selectSearchFn={selectSearchFn} />
                 ) : (
                     search.arr.map((data, i) => {
                         return (

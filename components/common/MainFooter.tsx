@@ -16,7 +16,7 @@ const MainFooter = ({ getRandomRestaurant, search, radius, setRadius, RandomSele
     return (
         <div className="h-[100px] flex flex-col items-center justify-around border-t">
             <p>거리선택(m)</p>
-            <div className="flex items-center">
+            <div className="flex w-full justify-around">
                 {RADIUS_LIST.map((el) => {
                     return (
                         <React.Fragment key={`RADIUS_LIST${el.id}`}>
@@ -38,11 +38,15 @@ const MainFooter = ({ getRandomRestaurant, search, radius, setRadius, RandomSele
                     );
                 })}
             </div>
-            <div>
-                <button disabled={search.arr.length === 0} onClick={() => getRandomRestaurant()}>
-                    뭘먹을까?
-                </button>
-            </div>
+            <button
+                className="border w-[98%] py-1 text-white bg-[var(--red)] rounded-md"
+                disabled={search.arr.length === 0}
+                onClick={() => {
+                    getRandomRestaurant();
+                }}
+            >
+                뭘먹을까?
+            </button>
         </div>
     );
 };
