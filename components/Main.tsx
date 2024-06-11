@@ -1,15 +1,13 @@
 "use client";
 import KakaoMap from "@/app/KakaoMap";
+import { KEYWORD_LIST, RADIUS_LIST } from "@Enum/ListEnum";
 import { PlacesSearchResultItem } from "@type/searchType";
+import Image from "next/image";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Address } from "react-daum-postcode";
-import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import ListItem from "./ListItem";
-import RoundBtn from "./common/RoundBtn";
 import MainFooter from "./common/MainFooter";
-import { KEYWORD_LIST, RADIUS_LIST } from "@Enum/ListEnum";
-import Image from "next/image";
-import localIcon from "@public/img/mylocation_Icon.png";
+import RoundBtn from "./common/RoundBtn";
 
 const KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
@@ -18,7 +16,7 @@ const KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 export default function Main() {
     const ref = useRef<HTMLDivElement | null>(null);
     const [openPostcode, setOpenPostcode] = useState<boolean>(false);
-    const [searchAdress, setSearchAdress] = useState<Address>();
+    // const [searchAdress, setSearchAdress] = useState<Address>();
     // const [inputValue, setInputValue] = useState("");
     const DaumPostcodeRef = useRef<HTMLDivElement | null>(null);
     const [search, setSearch] = useState<{
@@ -56,13 +54,13 @@ export default function Main() {
     const handle = useMemo(() => {
         // 버튼 클릭 이벤트
         const clickButton = () => setOpenPostcode((current) => !current);
-        // 주소 선택 이벤트
-        const selectAddress = (data: Address) => {
-            setSearchAdress(data);
-            setOpenPostcode(false);
-        };
 
-        return { clickButton, selectAddress };
+        // const selectAddress = (data: Address) => {
+        //     setSearchAdress(data);
+        //     setOpenPostcode(false);
+        // };//검색시 해당 주소로 이동
+
+        return { clickButton };
     }, []);
 
     // 카테고리 검색으로 주변 위치 검색하기
@@ -95,6 +93,7 @@ export default function Main() {
     const selectSearchFn = (data: PlacesSearchResultItem) => {
         setIsOpen(true);
         setSearch((pre) => ({ ...pre, select: data }));
+        setRadius((pre) => ({ ...pre, level: 1 }));
         setState((pre) => ({
             ...pre,
             center: { lat: Number(data.y), lng: Number(data.x) },
@@ -121,12 +120,14 @@ export default function Main() {
                     }));
                 },
                 (err) => {
+                    console.error(err);
                     setState((prev) => ({
                         ...prev,
                         errMsg: err.message,
                         isLoading: true,
                     }));
-                }
+                },
+                { maximumAge: 300000, timeout: 100000, enableHighAccuracy: true }
             );
         } else {
             setState((prev) => ({
@@ -154,69 +155,67 @@ export default function Main() {
             setKeyWord(KEYWORD_LIST[0]);
             setRadius(RADIUS_LIST[0]);
         }
-    }, [isSdkLoaded]);
+    }, [isSdkLoaded]); //마운트시 초기 값 설정
 
     useEffect(() => {
         if (ref.current) {
             ref.current.style.height = `${window.innerHeight - ref.current?.getBoundingClientRect().top - 100}px`;
         }
-    }, [search.arr.length]);
+    }, [search.arr.length]); //배열 길이가 달라질경우 높이 리스트 박스 높이 재설정
 
     useEffect(() => {
-        if (!isSdkLoaded) return;
-        const { kakao } = window;
-
-        const geocoder = new kakao.maps.services.Geocoder();
-        if (searchAdress?.address) {
-            geocoder.addressSearch(searchAdress?.address, (result: any, status: any) => {
-                if (status === kakao.maps.services.Status.OK) {
-                    const coords = new kakao.maps.LatLng(result[0].road_address.y, result[0].road_address.x);
-                    setState((prev) => ({
-                        ...prev,
-                        center: {
-                            lat: result[0].road_address.y,
-                            lng: result[0].road_address.x,
-                        },
-                        isLoading: false,
-                    }));
-
-                    // // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-                    // map.setCenter(coords);
-
-                    // // 마커를 결과값으로 받은 위치로 옮깁니다
-                    // marker.setPosition(coords);
-                }
-            });
-        }
-    }, [searchAdress?.address]);
-    useEffect(() => {
-        console.log(keyWord.value);
-        console.log(radius.value);
-        console.log(isSdkLoaded && keyWord.value && radius.value);
-        console.log(state);
         if (isSdkLoaded && keyWord.value && radius.value && !state.isLoading) {
             searchPlaces(keyWord.value, radius.value);
         }
-    }, [keyWord.value, radius.value, isSdkLoaded, state.isLoading]);
+    }, [keyWord.value, radius.value, isSdkLoaded, state.isLoading]); //키워드와 범위로 주변 식당 검색
 
-    useEffect(() => {
-        const clickOutside = (e: MouseEvent) => {
-            if (openPostcode && DaumPostcodeRef.current && !DaumPostcodeRef.current.contains(e.target as Node)) {
-                handle.clickButton();
-            }
-        };
+    // useEffect(() => {
+    //     if (!isSdkLoaded) return;
+    //     const { kakao } = window;
 
-        if (typeof document !== "undefined") {
-            document.addEventListener("click", clickOutside);
-        }
+    //     const geocoder = new kakao.maps.services.Geocoder();
+    //     if (searchAdress?.address) {
+    //         geocoder.addressSearch(searchAdress?.address, (result: any, status: any) => {
+    //             if (status === kakao.maps.services.Status.OK) {
+    //                 console.log(result);
+    //                 // const coords = new kakao.maps.LatLng(result[0].road_address.y, result[0].road_address.x);
+    //                 setState((prev) => ({
+    //                     ...prev,
+    //                     center: {
+    //                         lat: result[0].road_address.y,
+    //                         lng: result[0].road_address.x,
+    //                     },
+    //                     isLoading: false,
+    //                 }));
 
-        // Cleanup function
-        return () => {
-            if (typeof document !== "undefined") {
-                document.removeEventListener("click", clickOutside);
-            }
-        };
-    }, [openPostcode, handle]);
+    //                 // // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+    //                 // map.setCenter(coords);
+
+    //                 // // 마커를 결과값으로 받은 위치로 옮깁니다
+    //                 // marker.setPosition(coords);
+    //             }
+    //         });
+    //     }
+    // }, [searchAdress?.address]);//검색시 해당 주소로 이동기능
+
+    // useEffect(() => {
+    //     const clickOutside = (e: MouseEvent) => {
+    //         if (openPostcode && DaumPostcodeRef.current && !DaumPostcodeRef.current.contains(e.target as Node)) {
+    //             handle.clickButton();
+    //         }
+    //     };
+
+    //     if (typeof document !== "undefined") {
+    //         document.addEventListener("click", clickOutside);
+    //     }
+
+    //     // Cleanup function
+    //     return () => {
+    //         if (typeof document !== "undefined") {
+    //             document.removeEventListener("click", clickOutside);
+    //         }
+    //     };
+    // }, [openPostcode, handle]); //검색창 열렸을 경우 해당 검색창이 아닌 다른 요소를 눌렀을때 닫히는 기능
     return (
         <div className="max-h-screen">
             {/* <div className="relative">

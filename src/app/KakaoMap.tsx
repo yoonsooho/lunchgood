@@ -58,19 +58,41 @@ const KakaoMap = ({ changeSdkLoaded, isSdkLoaded, state, search, isOpen, setIsOp
                                 position={{ lat: Number(search.select.y), lng: Number(search.select.x) }}
                             >
                                 {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
-                                <div className="bg-slate-50 mt-16">
+                                <div className="bg-slate-50 mt-[90px] relative">
                                     <div
+                                        style={{
+                                            position: "absolute",
+                                            bottom: "100%", // Place the arrow at the top
+                                            left: "50%",
+                                            transform: "translateX(-50%)",
+                                            borderWidth: "10px",
+                                            borderStyle: "solid",
+                                            borderColor: "transparent transparent #fca5a5 transparent",
+                                            width: 0,
+                                            height: 0,
+                                        }}
+                                    ></div>
+                                    <p
                                         style={{
                                             color: "#000",
                                             zIndex: "100",
-                                            width: "150px",
+                                            width: "120px",
                                             height: "50px",
-                                            display: "inline-block",
+                                            // display: "inline-block",
                                             boxSizing: "border-box" /* 패딩과 경계선을 포함하도록 설정 */,
+                                            // overflowWrap: "break-word",
+                                            // wordBreak: "break-all",
+                                            whiteSpace: "normal",
                                         }}
                                     >
                                         {search.select.place_name}
-                                    </div>
+                                    </p>
+                                    <a href={`https://map.kakao.com/link/to/${search.select.id}`} target="_blank">
+                                        길찾기
+                                    </a>
+                                    <a href={search.select.place_url} target="_blank">
+                                        장소정보
+                                    </a>
                                     <button className="close" onClick={() => setIsOpen(false)}>
                                         닫기
                                     </button>
