@@ -40,38 +40,41 @@ const KakaoMap = ({ changeSdkLoaded, isSdkLoaded, state, search, isOpen, setIsOp
                                 size: { width: 50, height: 50 },
                             }}
                         />
-                        {search.arr.map((data: PlacesSearchResultItem, i: number) => (
-                            <MapMarker
-                                key={`MapMaker-${i}`}
-                                position={{ lat: Number(data.y), lng: Number(data.x) }}
-                                image={{
-                                    src: "https://cdn-icons-png.flaticon.com/128/2098/2098567.png",
-                                    size: { width: 35, height: 35 },
-                                }}
-                                onClick={() => {
-                                    console.log(data);
-                                }}
-                            />
-                        ))}
+                        {search.arr.map((data: PlacesSearchResultItem, i: number) =>
+                            search.select.id === data.id ? (
+                                <MapMarker
+                                    zIndex={100}
+                                    key={`MapMaker-${i}`}
+                                    position={{ lat: Number(data.y), lng: Number(data.x) }}
+                                    image={{
+                                        src: "/img/LocationIcon.svg",
+                                        size: { width: 35, height: 35 },
+                                    }}
+                                    onClick={() => {
+                                        console.log(data);
+                                    }}
+                                />
+                            ) : (
+                                <MapMarker
+                                    zIndex={99}
+                                    key={`MapMaker-${i}`}
+                                    position={{ lat: Number(data.y), lng: Number(data.x) }}
+                                    image={{
+                                        src: "/img/maps-and-flags.svg",
+                                        size: { width: 35, height: 35 },
+                                    }}
+                                    onClick={() => {
+                                        console.log(data);
+                                    }}
+                                />
+                            )
+                        )}
                         {search.select && isOpen && (
                             <CustomOverlayMap // 인포윈도우를 생성하고 지도에 표시합니다
                                 position={{ lat: Number(search.select.y), lng: Number(search.select.x) }}
                             >
                                 {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
-                                <div className="bg-slate-50 mt-[90px] relative">
-                                    <div
-                                        style={{
-                                            position: "absolute",
-                                            bottom: "100%", // Place the arrow at the top
-                                            left: "50%",
-                                            transform: "translateX(-50%)",
-                                            borderWidth: "10px",
-                                            borderStyle: "solid",
-                                            borderColor: "transparent transparent #fca5a5 transparent",
-                                            width: 0,
-                                            height: 0,
-                                        }}
-                                    ></div>
+                                <div className="bg-slate-50 mt-[97px] relative border">
                                     <p
                                         style={{
                                             color: "#000",
@@ -87,12 +90,6 @@ const KakaoMap = ({ changeSdkLoaded, isSdkLoaded, state, search, isOpen, setIsOp
                                     >
                                         {search.select.place_name}
                                     </p>
-                                    <a href={`https://map.kakao.com/link/to/${search.select.id}`} target="_blank">
-                                        길찾기
-                                    </a>
-                                    <a href={search.select.place_url} target="_blank">
-                                        장소정보
-                                    </a>
                                     <button className="close" onClick={() => setIsOpen(false)}>
                                         닫기
                                     </button>

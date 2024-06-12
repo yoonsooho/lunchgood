@@ -1,21 +1,47 @@
 "use client";
 import { PlacesSearchResultItem } from "@type/searchType";
+import Image from "next/image";
 import React from "react";
 
 interface props {
     data: PlacesSearchResultItem;
     selectSearchFn?: (data: PlacesSearchResultItem) => void;
+    selectId?: string;
 }
 
-const ListItem = ({ data, selectSearchFn }: props) => {
+const ListItem = ({ data, selectSearchFn, selectId }: props) => {
     return (
         <div
-            className="border mx-[10px] flex flex-col gap-y-[5px] p-[10px] rounded-md"
+            className={`border mx-[10px] flex flex-row p-[10px] rounded-md ${
+                selectId === data.id ? "border-[var(--red)]" : null
+            }`}
             onClick={() => (selectSearchFn ? selectSearchFn(data) : null)}
         >
-            <p className="font-bold">{data.place_name}</p>
-            <p className="text-gray-500">{data.address_name}</p>
-            <p>{data.category_group_name}</p>
+            <div className="flex-[0.8] flex flex-col gap-y-[10px]">
+                <span>
+                    <a
+                        className={`font-bold tracking-wide ${selectId === data.id ? "text-[var(--red)]" : null}`}
+                        href={data.place_url}
+                        target="_blank"
+                    >
+                        {data.place_name}
+                        {" 〉"}
+                    </a>
+                </span>
+                <p className="text-gray-500">{data.address_name}</p>
+                <p>{data.category_name}</p>
+            </div>
+            <div className="flex-[0.2] flex items-center justify-center">
+                <a href={`https://map.kakao.com/link/to/${data.id}`} target="_blank">
+                    <Image
+                        unoptimized={true}
+                        src={"/img/findLoadIcon.png"}
+                        width={40}
+                        height={40}
+                        alt="현재위치아이콘"
+                    />
+                </a>
+            </div>
         </div>
     );
 };

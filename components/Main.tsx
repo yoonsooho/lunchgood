@@ -15,10 +15,10 @@ const KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
 export default function Main() {
     const ref = useRef<HTMLDivElement | null>(null);
-    const [openPostcode, setOpenPostcode] = useState<boolean>(false);
+    // const [openPostcode, setOpenPostcode] = useState<boolean>(false);
     // const [searchAdress, setSearchAdress] = useState<Address>();
     // const [inputValue, setInputValue] = useState("");
-    const DaumPostcodeRef = useRef<HTMLDivElement | null>(null);
+    // const DaumPostcodeRef = useRef<HTMLDivElement | null>(null);
     const [search, setSearch] = useState<{
         arr: kakao.maps.services.PlacesSearchResult;
         select: PlacesSearchResultItem;
@@ -51,17 +51,17 @@ export default function Main() {
     const [keyWord, setKeyWord] = useState({ id: 0, title: "", value: "", emoji: "" });
     const [isOpen, setIsOpen] = useState(false);
     const [randomSelect, setRandomSelect] = useState<PlacesSearchResultItem | null>(null);
-    const handle = useMemo(() => {
-        // 버튼 클릭 이벤트
-        const clickButton = () => setOpenPostcode((current) => !current);
+    // const handle = useMemo(() => {
+    //     // 버튼 클릭 이벤트
+    //     const clickButton = () => setOpenPostcode((current) => !current);
 
-        // const selectAddress = (data: Address) => {
-        //     setSearchAdress(data);
-        //     setOpenPostcode(false);
-        // };//검색시 해당 주소로 이동
+    //     const selectAddress = (data: Address) => {
+    //         setSearchAdress(data);
+    //         setOpenPostcode(false);
+    //     // };//검색시 해당 주소로 이동
 
-        return { clickButton };
-    }, []);
+    //     return { clickButton, selectAddress };
+    // }, []);
 
     // 카테고리 검색으로 주변 위치 검색하기
     const searchPlaces = (keyword: any, radius: any) => {
@@ -140,6 +140,15 @@ export default function Main() {
     const getRandomRestaurant = () => {
         const random = Math.floor(Math.random() * search.arr.length);
         setRandomSelect(search.arr[random]);
+        setSearch((pre) => ({ ...pre, select: search.arr[random] }));
+        console.log(search.arr[random]);
+        setState((prev) => ({
+            ...prev,
+            center: {
+                lat: Number(search.arr[random].y),
+                lng: Number(search.arr[random].x),
+            },
+        }));
     };
     const RandomSelectNull = () => {
         setRandomSelect(null);
@@ -233,7 +242,7 @@ export default function Main() {
                     전송하기
                 </button>
             </div> */}
-            <div className="w-[100vw] h-[300px] min-h-[300px] relative">
+            <div className="w-[100%] h-[300px] min-h-[300px] relative">
                 <KakaoMap
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
@@ -281,12 +290,12 @@ export default function Main() {
             </div>
             <div className="overflow-y-scroll flex flex-col gap-[10px] mt-[10px]" ref={ref}>
                 {randomSelect ? (
-                    <ListItem data={randomSelect} selectSearchFn={selectSearchFn} />
+                    <ListItem data={randomSelect} selectSearchFn={selectSearchFn} selectId={search.select.id} />
                 ) : (
                     search.arr.map((data, i) => {
                         return (
                             <React.Fragment key={data.id}>
-                                <ListItem data={data} selectSearchFn={selectSearchFn} />
+                                <ListItem data={data} selectSearchFn={selectSearchFn} selectId={search.select.id} />
                             </React.Fragment>
                         );
                     })
