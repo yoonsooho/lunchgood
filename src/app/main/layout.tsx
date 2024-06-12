@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
     title: "뭐먹지?",
     description: "뭐먹지 메인페이지",
+    openGraph: {
+        images: "/img/LocationIcon.svg",
+    },
 };
 
 export default function layout({

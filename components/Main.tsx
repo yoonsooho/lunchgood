@@ -212,7 +212,6 @@ export default function Main() {
             searchPlaces(search.pageNation.current + 1);
         }
     }, [inView]);
-    console.log(search.arr);
 
     // useEffect(() => {
     //     if (!isSdkLoaded) return;

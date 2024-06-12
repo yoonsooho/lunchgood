@@ -1,12 +1,8 @@
 "use client";
 
-import ListItem from "@components/ListItem";
-import Script from "next/script";
-import React, { useCallback, useEffect, useState } from "react";
-import { CustomOverlayMap, Map, MapInfoWindow, MapMarker } from "react-kakao-maps-sdk";
 import { PlacesSearchResultItem } from "@type/searchType";
-import RoundBtn from "@components/common/RoundBtn";
-import MainFooter from "@components/common/MainFooter";
+import Script from "next/script";
+import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 
 const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_APP_JS_KEY}&autoload=false&libraries=services`;
 
@@ -51,7 +47,7 @@ const KakaoMap = ({ changeSdkLoaded, isSdkLoaded, state, search, isOpen, setIsOp
                                         size: { width: 35, height: 35 },
                                     }}
                                     onClick={() => {
-                                        console.log(data);
+                                        // console.log(data);
                                     }}
                                 />
                             ) : (
@@ -64,7 +60,7 @@ const KakaoMap = ({ changeSdkLoaded, isSdkLoaded, state, search, isOpen, setIsOp
                                         size: { width: 35, height: 35 },
                                     }}
                                     onClick={() => {
-                                        console.log(data);
+                                        // console.log(data);
                                     }}
                                 />
                             )
