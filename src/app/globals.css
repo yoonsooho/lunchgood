@@ -20,7 +20,8 @@ html {
     box-sizing: border-box;
 }
 body {
-    color: rgb(var(--foreground-rgb));
+    /* color: rgb(var(--foreground-rgb)); */
+    color: black;
     box-sizing: border-box;
     max-width: 768px;
     margin: 0 auto;

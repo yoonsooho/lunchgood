@@ -3,7 +3,7 @@ import KakaoMap from "@/app/KakaoMap";
 import { KEYWORD_LIST, RADIUS_LIST } from "@Enum/ListEnum";
 import { PlacesSearchResultItem } from "@type/searchType";
 import Image from "next/image";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Address } from "react-daum-postcode";
 import ListItem from "./ListItem";
 import MainFooter from "./common/MainFooter";
