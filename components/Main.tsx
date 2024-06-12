@@ -8,22 +8,34 @@ import { Address } from "react-daum-postcode";
 import ListItem from "./ListItem";
 import MainFooter from "./common/MainFooter";
 import RoundBtn from "./common/RoundBtn";
+import { useInView } from "react-intersection-observer";
+import useDidMountEffect from "../hooks/useDidMountEffect";
 
 const KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
 // const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_APP_JS_KEY}&autoload=false&libraries=services`;
 
 export default function Main() {
-    const ref = useRef<HTMLDivElement | null>(null);
+    const {
+        ref: useInViewRef,
+        inView,
+        entry,
+    } = useInView({
+        /* Optional options */
+        threshold: 0,
+    });
+    const divRef = useRef<HTMLDivElement | null>(null);
     // const [openPostcode, setOpenPostcode] = useState<boolean>(false);
     // const [searchAdress, setSearchAdress] = useState<Address>();
     // const [inputValue, setInputValue] = useState("");
     // const DaumPostcodeRef = useRef<HTMLDivElement | null>(null);
     const [search, setSearch] = useState<{
+        pageNation: any;
         arr: kakao.maps.services.PlacesSearchResult;
         select: PlacesSearchResultItem;
         errMsg: string;
     }>({
+        pageNation: null,
         arr: [],
         select: {
             id: "",
@@ -62,21 +74,27 @@ export default function Main() {
 
     //     return { clickButton, selectAddress };
     // }, []);
-
     // 카테고리 검색으로 주변 위치 검색하기
-    const searchPlaces = (keyword: any, radius: any) => {
+    const searchPlaces = (currentPage: number) => {
         if (!state.center) return;
         const ps = new kakao.maps.services.Places();
         const options = {
             location: new kakao.maps.LatLng(state.localcenter.lat, state.localcenter.lng),
-            radius: radius,
+            radius: radius.value,
             sort: kakao.maps.services.SortBy.DISTANCE,
+            page: currentPage,
+            size: 15,
         };
         ps.keywordSearch(
-            keyword,
+            keyWord.value,
             (data, status, _pagination) => {
                 if (status === kakao.maps.services.Status.OK) {
-                    setSearch((pre) => ({ ...pre, errMsg: "", arr: data }));
+                    setSearch((pre) => ({
+                        ...pre,
+                        errMsg: "",
+                        arr: [...pre.arr, ...data],
+                        pageNation: _pagination,
+                    }));
                     // setSearchErr("");
                 } else {
                     // setSearch([]);
@@ -141,7 +159,6 @@ export default function Main() {
         const random = Math.floor(Math.random() * search.arr.length);
         setRandomSelect(search.arr[random]);
         setSearch((pre) => ({ ...pre, select: search.arr[random] }));
-        console.log(search.arr[random]);
         setState((prev) => ({
             ...prev,
             center: {
@@ -158,6 +175,12 @@ export default function Main() {
         setIsSdkLoaded(boolean);
     }, []);
 
+    const searchNullArr = () => {
+        setSearch((pre) => {
+            return { ...pre, arr: [] };
+        });
+    };
+
     useEffect(() => {
         if (isSdkLoaded) {
             getCurrentLocation();
@@ -167,16 +190,29 @@ export default function Main() {
     }, [isSdkLoaded]); //마운트시 초기 값 설정
 
     useEffect(() => {
-        if (ref.current) {
-            ref.current.style.height = `${window.innerHeight - ref.current?.getBoundingClientRect().top - 100}px`;
+        if (divRef.current) {
+            divRef.current.style.height = `${window.innerHeight - divRef.current?.getBoundingClientRect().top - 100}px`;
         }
     }, [search.arr.length]); //배열 길이가 달라질경우 높이 리스트 박스 높이 재설정
 
     useEffect(() => {
         if (isSdkLoaded && keyWord.value && radius.value && !state.isLoading) {
-            searchPlaces(keyWord.value, radius.value);
+            searchPlaces(1);
         }
     }, [keyWord.value, radius.value, isSdkLoaded, state.isLoading]); //키워드와 범위로 주변 식당 검색
+    useDidMountEffect(() => {
+        if (
+            isSdkLoaded &&
+            keyWord.value &&
+            radius.value &&
+            !state.isLoading &&
+            inView &&
+            search.pageNation.current !== search.pageNation.last
+        ) {
+            searchPlaces(search.pageNation.current + 1);
+        }
+    }, [inView]);
+    console.log(search.arr);
 
     // useEffect(() => {
     //     if (!isSdkLoaded) return;
@@ -278,6 +314,9 @@ export default function Main() {
                                 type="button"
                                 onClick={() => {
                                     RandomSelectNull();
+                                    if (keywordObj.id !== keyWord.id) {
+                                        searchNullArr();
+                                    }
                                     setKeyWord(keywordObj);
                                 }}
                             >
@@ -288,23 +327,37 @@ export default function Main() {
                 </div>
                 {/* <button onClick={() => getCurrentLocation()}>현재위치</button> */}
             </div>
-            <div className="overflow-y-scroll flex flex-col gap-[10px] mt-[10px]" ref={ref}>
+
+            <div className="overflow-y-scroll flex flex-col gap-[10px] mt-[10px]" ref={divRef}>
                 {randomSelect ? (
                     <ListItem data={randomSelect} selectSearchFn={selectSearchFn} selectId={search.select.id} />
                 ) : (
                     search.arr.map((data, i) => {
-                        return (
+                        return search.arr.length === i + 1 ? (
+                            <React.Fragment key={data.id}>
+                                <ListItem data={data} selectSearchFn={selectSearchFn} selectId={search.select.id} />
+                                <div ref={useInViewRef}></div>
+                            </React.Fragment>
+                        ) : (
                             <React.Fragment key={data.id}>
                                 <ListItem data={data} selectSearchFn={selectSearchFn} selectId={search.select.id} />
                             </React.Fragment>
                         );
+                        // return (
+                        //     <React.Fragment key={data.id}>
+                        //         <ListItem data={data} selectSearchFn={selectSearchFn} selectId={search.select.id} />
+                        //     </React.Fragment>
+                        // );
                     })
                 )}
+                {/* <div ref={useInViewRef}></div> */}
                 {search.errMsg}
             </div>
+
             <MainFooter
                 getRandomRestaurant={getRandomRestaurant}
                 search={search}
+                searchNullArr={searchNullArr}
                 radius={radius}
                 setRadius={setRadius}
                 RandomSelectNull={RandomSelectNull}

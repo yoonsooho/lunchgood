@@ -5,14 +5,20 @@ import RoundBtn from "./RoundBtn";
 
 interface props {
     getRandomRestaurant: () => void;
-    search: { arr: kakao.maps.services.PlacesSearchResult; select: PlacesSearchResultItem; errMsg: string };
+    search: {
+        arr: kakao.maps.services.PlacesSearchResult;
+        select: PlacesSearchResultItem;
+        errMsg: string;
+        pageNation: any;
+    };
+    searchNullArr: () => void;
     radius: { id: number; title: string; value: number; emoji: string; level: number };
     setRadius: React.Dispatch<
         React.SetStateAction<{ id: number; title: string; value: number; emoji: string; level: number }>
     >;
     RandomSelectNull: () => void;
 }
-const MainFooter = ({ getRandomRestaurant, search, radius, setRadius, RandomSelectNull }: props) => {
+const MainFooter = ({ getRandomRestaurant, search, radius, setRadius, RandomSelectNull, searchNullArr }: props) => {
     return (
         <div className="h-[100px] flex flex-col items-center justify-around border-t">
             <p>거리선택(m)</p>
@@ -29,6 +35,9 @@ const MainFooter = ({ getRandomRestaurant, search, radius, setRadius, RandomSele
                                 className={`${el.value === radius.value && "bg-red-50"}`}
                                 onClick={() => {
                                     RandomSelectNull();
+                                    if (el.id !== radius.id) {
+                                        searchNullArr();
+                                    }
                                     setRadius(el);
                                 }}
                             >
