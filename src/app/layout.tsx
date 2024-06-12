@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "뭐먹지?",
     description: "뭘먹으면 좋을지 추천해주는 사이트입니다.",
     openGraph: {
-        images: "../../public/img/LocationIcon.svg",
+        images: "/img/openGraphImg.png",
     },
 };
 
