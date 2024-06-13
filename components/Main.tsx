@@ -308,6 +308,7 @@ export default function Main() {
                     className="absolute bottom-[10px] right-[10px] z-10 bg-white p-[5px] rounded-full shadow-md"
                     onClick={() => {
                         getCurrentLocation();
+                        searchNullArr();
                         searchPlaces(1);
                     }}
                 >
