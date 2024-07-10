@@ -10,6 +10,9 @@ import MainFooter from "./common/MainFooter";
 import RoundBtn from "./common/RoundBtn";
 import { useInView } from "react-intersection-observer";
 import useDidMountEffect from "../hooks/useDidMountEffect";
+import myLocationImg from "@public/img/mylocation_Icon.png";
+import { signIn } from "next-auth/react";
+import LoginBtn from "./LoginBtn";
 
 const KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
@@ -279,6 +282,8 @@ export default function Main() {
     // }, [openPostcode, handle]); //검색창 열렸을 경우 해당 검색창이 아닌 다른 요소를 눌렀을때 닫히는 기능
     return (
         <div className="max-h-screen">
+            <LoginBtn></LoginBtn>
+
             {/* <div className="relative">
                 <button onClick={handle.clickButton}>검색창 열기</button>
                 <input onChange={(e) => setInputValue(e.target.value)} value={inputValue} />
@@ -313,8 +318,9 @@ export default function Main() {
                     }}
                 >
                     <Image
+                        placeholder="blur"
                         unoptimized={true}
-                        src={"/img/mylocation_Icon.png"}
+                        src={myLocationImg}
                         width={20}
                         height={20}
                         alt="현재위치아이콘"

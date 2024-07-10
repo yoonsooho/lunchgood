@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AuthSession from "@components/providers/SessionProvider";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="ko">
-            <body className={inter.className}>{children}</body>
+            <AuthSession>
+                <body className={inter.className}>{children}</body>
+            </AuthSession>
         </html>
     );
 }
