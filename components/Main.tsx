@@ -232,7 +232,6 @@ export default function Main() {
             searchPlaces(search.pageNation.current + 1);
         }
     }, [inView]);
-
     // useEffect(() => {
     //     if (!isSdkLoaded) return;
     //     const { kakao } = window;
