@@ -4,7 +4,7 @@ import KakaoProvider from "next-auth/providers/kakao";
 // import GoogleProvider from "next-auth/providers/google";
 
 const authOptions: any = {
-    // secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: "jwt",
     },

@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest, event: NextFetchEvent) {
     // 로그인 했을 경우에만 존재함 ( "next-auth.session-token" 쿠키가 존재할 때 )
-    const session = await getToken({ req, raw: true });
+    const session = await getToken({ req, raw: true, secret: process.env.NEXTAUTH_SECRET });
     const { pathname } = req.nextUrl;
     console.log("session", session);
 
