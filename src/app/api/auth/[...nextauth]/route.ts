@@ -3,8 +3,8 @@ import KakaoProvider from "next-auth/providers/kakao";
 // import NaverProvider from "next-auth/providers/naver";
 // import GoogleProvider from "next-auth/providers/google";
 
-export const authOptions: any = {
-    secret: process.env.NEXTAUTH_SECRET,
+const authOptions: any = {
+    // secret: process.env.NEXTAUTH_SECRET,
     session: {
         strategy: "jwt",
     },
@@ -98,6 +98,6 @@ export const authOptions: any = {
     }, //카카오 jwt방식으로 하기
 };
 
-export const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
