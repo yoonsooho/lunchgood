@@ -7,7 +7,9 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "e2e": "cypress run",
+        "e2e:open": "cypress open"
     },
     "dependencies": {
         "next": "14.2.3",
@@ -22,6 +24,7 @@
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
+        "cypress": "^13.13.0",
         "eslint": "^8",
         "eslint-config-next": "14.2.3",
         "husky": "^8.0.0",
