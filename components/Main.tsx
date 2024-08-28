@@ -282,7 +282,7 @@ export default function Main() {
     // }, [openPostcode, handle]); //검색창 열렸을 경우 해당 검색창이 아닌 다른 요소를 눌렀을때 닫히는 기능
     return (
         <div className="max-h-screen">
-            <LoginBtn></LoginBtn>
+            {/* <LoginBtn></LoginBtn> */}
 
             {/* <div className="relative">
                 <button onClick={handle.clickButton}>검색창 열기</button>
