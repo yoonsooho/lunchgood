@@ -7,6 +7,7 @@ import React from "react";
 
 const LoginBtn = () => {
     const { data } = useSession();
+    console.log(data);
 
     const onClick = async (e: React.MouseEvent) => {
         e.preventDefault();

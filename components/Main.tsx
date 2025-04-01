@@ -355,7 +355,6 @@ export default function Main() {
                         </React.Fragment>
                     ))}
                 </div>
-                {/* <button onClick={() => getCurrentLocation()}>현재위치</button> */}
             </div>
 
             <div className="overflow-y-scroll flex flex-col pb-[16px]" ref={divRef}>

@@ -70,25 +70,19 @@ const KakaoMap = ({ changeSdkLoaded, isSdkLoaded, state, search, isOpen, setIsOp
                             position={{ lat: Number(search.select.y), lng: Number(search.select.x) }}
                         >
                             {/* 인포윈도우에 표출될 내용으로 HTML 문자열이나 React Component가 가능합니다 */}
-                            <div className="bg-slate-50 mt-[97px] relative border">
-                                <p
-                                    style={{
-                                        color: "#000",
-                                        zIndex: "100",
-                                        width: "120px",
-                                        height: "50px",
-                                        // display: "inline-block",
-                                        boxSizing: "border-box" /* 패딩과 경계선을 포함하도록 설정 */,
-                                        // overflowWrap: "break-word",
-                                        // wordBreak: "break-all",
-                                        whiteSpace: "normal",
-                                    }}
-                                >
+                            <div className="bg-white mt-[80px] relative border rounded-lg shadow-md p-3 min-w-[200px]">
+                                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-t border-l"></div>
+                                <p className="text-gray-800 font-medium mb-2 text-center overflow-hidden">
                                     {search.select.place_name}
                                 </p>
-                                <button className="close" onClick={() => setIsOpen(false)}>
-                                    닫기
-                                </button>
+                                <div className="flex justify-end mt-2">
+                                    <button
+                                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm transition-colors"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        닫기
+                                    </button>
+                                </div>
                             </div>
                         </CustomOverlayMap>
                     )}
