@@ -16,8 +16,6 @@ import LoginBtn from "./LoginBtn";
 
 const KAKAO_SEARCH_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
-// const KAKAO_SDK_URL = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_APP_JS_KEY}&autoload=false&libraries=services`;
-
 export default function Main() {
     const {
         ref: useInViewRef,
@@ -28,10 +26,6 @@ export default function Main() {
         threshold: 0,
     });
     const divRef = useRef<HTMLDivElement | null>(null);
-    // const [openPostcode, setOpenPostcode] = useState<boolean>(false);
-    // const [searchAdress, setSearchAdress] = useState<Address>();
-    // const [inputValue, setInputValue] = useState("");
-    // const DaumPostcodeRef = useRef<HTMLDivElement | null>(null);
     const [search, setSearch] = useState<{
         pageNation: any;
         arr: kakao.maps.services.PlacesSearchResult;
@@ -77,18 +71,6 @@ export default function Main() {
     });
     const [isOpen, setIsOpen] = useState(false);
     const [randomSelect, setRandomSelect] = useState<PlacesSearchResultItem | null>(null);
-    // const handle = useMemo(() => {
-    //     // 버튼 클릭 이벤트
-    //     const clickButton = () => setOpenPostcode((current) => !current);
-
-    //     const selectAddress = (data: Address) => {
-    //         setSearchAdress(data);
-    //         setOpenPostcode(false);
-    //     // };//검색시 해당 주소로 이동
-
-    //     return { clickButton, selectAddress };
-    // }, []);
-    // 카테고리 검색으로 주변 위치 검색하기
     const searchPlaces = (currentPage: number) => {
         if (!state.center) return;
         const ps = new kakao.maps.services.Places();
@@ -111,9 +93,6 @@ export default function Main() {
                     }));
                     // setSearchErr("");
                 } else {
-                    // setSearch([]);
-                    // console.error("검색에 실패하였습니다.");
-                    // setSearchErr("검색결과가 없습니다.");
                     setSearch((pre) => ({
                         ...pre,
                         errMsg: "검색결과가 없습니다. 범위를 늘려보세요.",
@@ -233,53 +212,6 @@ export default function Main() {
         }
     }, [inView]);
 
-    // useEffect(() => {
-    //     if (!isSdkLoaded) return;
-    //     const { kakao } = window;
-
-    //     const geocoder = new kakao.maps.services.Geocoder();
-    //     if (searchAdress?.address) {
-    //         geocoder.addressSearch(searchAdress?.address, (result: any, status: any) => {
-    //             if (status === kakao.maps.services.Status.OK) {
-    //                 console.log(result);
-    //                 // const coords = new kakao.maps.LatLng(result[0].road_address.y, result[0].road_address.x);
-    //                 setState((prev) => ({
-    //                     ...prev,
-    //                     center: {
-    //                         lat: result[0].road_address.y,
-    //                         lng: result[0].road_address.x,
-    //                     },
-    //                     isLoading: false,
-    //                 }));
-
-    //                 // // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-    //                 // map.setCenter(coords);
-
-    //                 // // 마커를 결과값으로 받은 위치로 옮깁니다
-    //                 // marker.setPosition(coords);
-    //             }
-    //         });
-    //     }
-    // }, [searchAdress?.address]);//검색시 해당 주소로 이동기능
-
-    // useEffect(() => {
-    //     const clickOutside = (e: MouseEvent) => {
-    //         if (openPostcode && DaumPostcodeRef.current && !DaumPostcodeRef.current.contains(e.target as Node)) {
-    //             handle.clickButton();
-    //         }
-    //     };
-
-    //     if (typeof document !== "undefined") {
-    //         document.addEventListener("click", clickOutside);
-    //     }
-
-    //     // Cleanup function
-    //     return () => {
-    //         if (typeof document !== "undefined") {
-    //             document.removeEventListener("click", clickOutside);
-    //         }
-    //     };
-    // }, [openPostcode, handle]); //검색창 열렸을 경우 해당 검색창이 아닌 다른 요소를 눌렀을때 닫히는 기능
     return (
         <div className="max-h-screen">
             {/* <LoginBtn></LoginBtn> */}
@@ -372,11 +304,6 @@ export default function Main() {
                                 <ListItem data={data} selectSearchFn={selectSearchFn} selectId={search.select.id} />
                             </React.Fragment>
                         );
-                        // return (
-                        //     <React.Fragment key={data.id}>
-                        //         <ListItem data={data} selectSearchFn={selectSearchFn} selectId={search.select.id} />
-                        //     </React.Fragment>
-                        // );
                     })
                 )}
                 {/* <div ref={useInViewRef}></div> */}
@@ -391,22 +318,6 @@ export default function Main() {
                 setRadius={setRadius}
                 RandomSelectNull={RandomSelectNull}
             />
-            {/* {openPostcode && (
-                <div ref={DaumPostcodeRef} onClick={handle.clickButton} className="flex justify-center items-center">
-                    <DaumPostcode
-                        onComplete={handle.selectAddress} // 값을 선택할 경우 실행되는 이벤트
-                        autoClose={false} // 값을 선택할 경우 사용되는 DOM을 제거하여 자동 닫힘 설정
-                        defaultQuery="" // 팝업을 열때 기본적으로 입력되는 검색어
-                        style={{
-                            position: "absolute",
-                            zIndex: "5",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "80%",
-                        }}
-                    />
-                </div>
-            )} */}
         </div>
     );
 }
